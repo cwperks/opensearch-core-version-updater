@@ -43,7 +43,7 @@ function updateVersionJava(previousVersion, newVersion, updateCurrentVersion) {
   ];
   const versionJavaFilePath = versionJavaFilePaths.find(path => fs.existsSync(path))
     ?? (() => { throw new Error('Could not find Version.java file'); })();
-  core.log(`Found version.java at ${versionJavaFilePath}`);
+  core.info(`Found version.java at ${versionJavaFilePath}`);
 
   // Read the contents of the Version.java file
   const versionJavaContent = fs.readFileSync(versionJavaFilePath, 'utf-8');
@@ -67,7 +67,7 @@ function updateVersionJava(previousVersion, newVersion, updateCurrentVersion) {
   }
 
   // Append the new version entry after the previous entry
-  let newVersionJavaContent = versionJavaContent.replace(luceneVersionRegex, `$&\n${newVersionLine}`);
+  let newVersionJavaContent = versionJavaContent.replace(luceneLineRegex, `$&\n${newVersionLine}`);
 
   // Update the current version reference to the new version 
   if (updateCurrentVersion) {
@@ -78,7 +78,7 @@ function updateVersionJava(previousVersion, newVersion, updateCurrentVersion) {
 
   // Update the file on disk
   fs.writeFileSync(versionJavaFilePath, newVersionJavaContent, 'utf-8');
-  core.log(`${filePath} has been updated.`);
+  core.info(`${versionJavaFilePath} has been updated.`);
   core.endGroup();
 }
 
@@ -98,10 +98,10 @@ function updateBwcVersion(previousVersion) {
   const alreadyHasPreviousVersionForBwc = bwcVersionsContent.match(new RegExp(escapeRegExp(previousVersionForBwc)));
   if (alreadyHasPreviousVersionForBwc) {
     core.notice(`Version ${previousVersion.toDottedString()}, was already found in ${bwcVersionsPath}`);
-    core.log(`${filePath} is up-to-date.`);
+    core.info(`${bwcVersionsPath} is up-to-date.`);
   } else {
     fs.appendFileSync(bwcVersionsPath, previousVersionForBwc + "\r\n");
-    core.log(`${filePath} has been updated.`);
+    core.info(`${bwcVersionsPath} has been updated.`);
   }
   core.endGroup();
 }
@@ -110,3 +110,5 @@ function updateBwcVersion(previousVersion) {
 function escapeRegExp(string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
+
+module.exports = updateRepositoryVersions
