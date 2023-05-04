@@ -1,0 +1,22 @@
+name: OpenSearch Core Version Updater
+description: Updates version information for OpenSearch
+
+branding:
+  icon: 'chevron-up'
+  color: 'blue'
+
+inputs:
+  previous-version:
+    description: The previous version of OpenSearch that is being replace with this new version, e.g. "2.2.2"
+    required: true
+  new-version:
+    description: The new version of OpenSearch that is being added, e.g. "2.3.0"
+    required: true
+  update-current:
+    description: If the current version should be replace with the new version
+    required: false
+    default: false
+
+runs:
+  using: 'node16'
+  main: 'dist/main.js'
